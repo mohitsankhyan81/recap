@@ -2,15 +2,15 @@ import React, { useState } from 'react'
 
 const App = () => {
 
-  const [data,setdata]= useState([]);
+  const [data,setdata]=useState([]);
   const [todo,settodo]=useState('');
-  const [editindex,seteditindex]=useState(null)
+  const [editindex,seteditindex]=useState(null);
 
-  const handlesubmit=(e)=>{
+  const handleSubmit=(e)=>{
     e.preventDefault()
     if(todo.trim()==="")return
 
-    if(editindex==null){
+    if(editindex===null){
       setdata([...data,todo])
     }
     else{
@@ -21,28 +21,28 @@ const App = () => {
     settodo("")
   }
 
-  const EditTodo=(i)=>{
+  const deletetodo=(e)=>{
+    setdata(data.filter((_,i)=>i!==e))
+  }
+
+  const edittodo=(i)=>{
     settodo(data[i])
     seteditindex(i)
   }
-  const DeleteTodo=(e)=>{
-    setdata(data.filter((_,i)=>i!==e))
-  }
   return (
     <div>
-      <h1>Todo List</h1>
-      <form onSubmit={handlesubmit}>
-        <input type="text" placeholder='Enter your task' value={todo} onChange={e=>settodo(e.target.value)}/>
-
-        <button>submit</button>
+      <h1>Todo Task</h1>
+      <form onSubmit={handleSubmit}>
+        <input type="text" placeholder='Enter task here' value={todo} onChange={e=>settodo(e.target.value)}/>
+        <button>Submit</button>
       </form>
 
       <ul>
         {data.map((e,i)=>(
           <li key={i}>
             {e}
-            <button onClick={()=>EditTodo(i)}>Edit</button>
-            <button onClick={()=>DeleteTodo(i)}>delete</button>
+            <button onClick={()=>edittodo(i)}>Edit</button>
+            <button onClick={()=>deletetodo(i)}>delete</button>
           </li>
         ))}
       </ul>
