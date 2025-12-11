@@ -5,13 +5,11 @@ const App = () => {
   const [todo,settodo]=useState('');
   const [editindex,seteditindex]=useState(null);
 
-
   const HandleSubmit=(e)=>{
     e.preventDefault();
-    if(todo.trim()==='')return
-
+    if(todo.trim()==='')return;
     if(editindex===null){
-      setdata([...data,todo])
+      setdata([...data,todo]);
     }
     else{
       data[editindex]=todo
@@ -20,21 +18,21 @@ const App = () => {
     }
     settodo('');
   }
-
-  const deleteTodo=(i)=>{
+  
+  const deletetodo=(i)=>{
     setdata(data.filter((_,e)=>i!==e));
   }
 
   const edittodo=(i)=>{
-    settodo(data[i]);
-    seteditindex(i);
+    settodo(data[i]),
+    seteditindex(i)
   }
   return (
     <div>
-      <h1>Daily task</h1>
+      <h1>Task Manager</h1>
       <form onSubmit={HandleSubmit}>
-        <input type="text" placeholder='Enter the task' value={todo} onChange={e=>settodo(e.target.value)}/>
-        <button>submit</button>
+        <input type="text" placeholder='Enter your task' value={todo} onChange={e=>settodo(e.target.value)} />
+        <button>Submit</button>
       </form>
 
       <ul>
@@ -42,7 +40,7 @@ const App = () => {
           <li key={i}>
             {e}
             <button onClick={()=>edittodo(i)}>Edit</button>
-            <button onClick={()=>deleteTodo(i)}>Deleat</button>
+            <button onClick={()=>deletetodo(i)}>Delete</button>
           </li>
         ))}
       </ul>
