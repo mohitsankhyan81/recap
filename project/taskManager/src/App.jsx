@@ -1,54 +1,28 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios';
-
-const App = () => {
-  const [data, setdata] = useState([]);
-  const [todo, settodo] = useState('');
-
-  useEffect(() => {
-    axios.get("http://localhost:3434/todos")
-    .then(res => setdata(res.data));
-  }, []);
-
-  const HandleSubmit = (e) => {
-    e.preventDefault();
-    if (todo.trim() === '') return;
-
-    axios.post("http://localhost:3434/todos", { text: todo })
-    .then(res => setdata([...data, res.data]));
-
+import React,{useEffect,useState} from 'react'
+import axios from 'axios'
+export default function App(){
+  const [data,setdata]=useState([]);
+  const [todo,settodo]=useState('');
+  useEffect(()=>{axios.get('http://localhost:4543/todos').then(r=>setdata(r.data))},[]);
+  const handleSubmit=e=>{e.preventDefault();if(todo.trim()==='')return;
+    axios.post('http://localhost:4543/todos',{text:todo}).then(r=>setdata(prev=>[...prev,r.data]));
     settodo('');
   }
-
-  const deletetodo = (id) => {
-    axios.delete(`http://localhost:3434/todos/${id}`)
-    .then(() => setdata(data.filter(e => e._id!==id)))
-  }
-
+  const handledelete=id=>{axios.delete(`http://localhost:4543/todos/${id}`).then(()=>setdata(prev=>prev.filter(i=>i._id!==id)))}
   return (
-    <div>
-      <h1>Task Manager</h1>
-
-      <form onSubmit={HandleSubmit}>
-        <input 
-          type="text" 
-          placeholder="Enter your task"
-          value={todo}
-          onChange={e => settodo(e.target.value)}
-        />
+    <div style={{padding:20}}>
+      <h1>Tasks here</h1>
+      <form onSubmit={handleSubmit}>
+        <input value={todo} onChange={e=>settodo(e.target.value)} placeholder="Enter your data"/>
         <button>Submit</button>
       </form>
-
       <ul>
-        {data.map((e) => (
+        {data.map(e=>(
           <li key={e._id}>
-            {e.text}
-            <button onClick={() => deletetodo(e._id)}>Delete</button>
+            {e.text} <button onClick={()=>handledelete(e._id)}>Delete</button>
           </li>
         ))}
       </ul>
     </div>
   )
 }
-
-export default App;
