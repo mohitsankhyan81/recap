@@ -26,6 +26,16 @@ app.delete('/todos/:id',async(req,res)=>{
   res.json({ok:true})
 })
 
+app.put('/todos/:id', async (req, res) => {
+  const updated = await data.findByIdAndUpdate(
+    req.params.id,
+    { text: req.body.text },
+    { new: true }
+  );
+  res.json(updated);
+});
+
+
 const port=2522;
 
 app.listen(port,()=>{
