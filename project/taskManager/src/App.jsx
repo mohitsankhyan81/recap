@@ -1,46 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios';
 
 const App = () => {
-  const [data,setdata]=useState([]);
-  const [todo,settodo]=useState('');
-  const [editindex,seteditindex]=useState(null);
+  const [data, setdata] = useState([]);
+  const [todo, settodo] = useState('');
 
-  const HandleSubmit=(e)=>{
+  useEffect(() => {
+    axios.get("http://localhost:3434/todos")
+    .then(res => setdata(res.data));
+  }, []);
+
+  const HandleSubmit = (e) => {
     e.preventDefault();
-    if(todo.trim()==='')return;
-    if(editindex===null){
-      setdata([...data,todo]);
-    }
-    else{
-      data[editindex]=todo
-      setdata([...data])
-      seteditindex(null)
-    }
+    if (todo.trim() === '') return;
+
+    axios.post("http://localhost:3434/todos", { text: todo })
+    .then(res => setdata([...data, res.data]));
+
     settodo('');
   }
-  
-  const deletetodo=(i)=>{
-    setdata(data.filter((_,e)=>i!==e));
+
+  const deletetodo = (id) => {
+    axios.delete(`http://localhost:3434/todos/${id}`)
+    .then(() => setdata(data.filter(e => e._id!==id)))
   }
 
-  const edittodo=(i)=>{
-    settodo(data[i]),
-    seteditindex(i)
-  }
   return (
     <div>
       <h1>Task Manager</h1>
+
       <form onSubmit={HandleSubmit}>
-        <input type="text" placeholder='Enter your task' value={todo} onChange={e=>settodo(e.target.value)} />
+        <input 
+          type="text" 
+          placeholder="Enter your task"
+          value={todo}
+          onChange={e => settodo(e.target.value)}
+        />
         <button>Submit</button>
       </form>
 
       <ul>
-        {data.map((e,i)=>(
-          <li key={i}>
-            {e}
-            <button onClick={()=>edittodo(i)}>Edit</button>
-            <button onClick={()=>deletetodo(i)}>Delete</button>
+        {data.map((e) => (
+          <li key={e._id}>
+            {e.text}
+            <button onClick={() => deletetodo(e._id)}>Delete</button>
           </li>
         ))}
       </ul>
@@ -48,4 +51,4 @@ const App = () => {
   )
 }
 
-export default App
+export default App;
