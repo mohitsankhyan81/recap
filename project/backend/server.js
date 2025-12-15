@@ -9,7 +9,7 @@ app.use(express.json());
 mongoose.connect("mongodb://127.0.0.1:27017/taskdata");
 
 const data=mongoose.model("task",new mongoose.Schema({
-  text:String
+  text:String 
 }))
 
 app.get('/todos',async(req,res)=>{
